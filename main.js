@@ -25,7 +25,7 @@ class LottoGenerator extends HTMLElement {
                     font-weight: bold;
                     color: white;
                     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                    animation: pop-in 0.5s ease-out forwards;
+                    animation: pop-in 0.3s ease-out forwards;
                 }
                 @keyframes pop-in {
                     0% { transform: scale(0); opacity: 0; }
@@ -92,9 +92,16 @@ class LottoGenerator extends HTMLElement {
                 ball.className = 'ball';
                 ball.textContent = number;
                 this.lottoContainer.appendChild(ball);
-            }, index * 200); // Stagger the animation
+            }, index * 100); // Stagger the animation
         });
     }
 }
 
 customElements.define('lotto-generator', LottoGenerator);
+
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+});
