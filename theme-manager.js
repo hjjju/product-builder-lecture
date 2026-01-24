@@ -1,14 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.createElement('button');
     themeToggle.id = 'theme-toggle';
-    themeToggle.textContent = 'Toggle Theme';
+    // Text content will be set by language-manager.js
 
-    // Find the main-container to append the button to
-    const mainContainer = document.querySelector('.main-container');
-    if (mainContainer) {
-        mainContainer.appendChild(themeToggle);
+    const topRightControls = document.querySelector('.top-right-controls');
+    if (topRightControls) {
+        topRightControls.appendChild(themeToggle);
     } else {
-        // Fallback if main-container is not found (e.g., for very simple pages)
+        // Fallback if .top-right-controls is not found
         document.body.appendChild(themeToggle);
     }
 

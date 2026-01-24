@@ -7,26 +7,34 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="theme-manager.js" defer></script>
+    <script src="language-manager.js" defer></script>
 </head>
 <body class="contact-page">
+    <div class="top-right-controls">
+        <select id="language-switcher">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+            <option value="ja">日本語</option>
+        </select>
+    </div>
     <div class="main-container">
-        <h1>Contact Us</h1>
+        <h1 data-lang="contactTitle">Contact Us</h1>
         <form action="https://formspree.io/f/mdaepgnp" method="POST">
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name" data-lang="formName">Name:</label>
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email" data-lang="formEmail">Email:</label>
                 <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
-                <label for="message">Message:</label>
+                <label for="message" data-lang="formMessage">Message:</label>
                 <textarea id="message" name="message" rows="5" required></textarea>
             </div>
-            <button type="submit">Send Message</button>
+            <button type="submit" data-lang="formSubmit">Send Message</button>
         </form>
-        <p><a href="index.html">Back to Lotto Generator</a></p>
+        <p><a href="index.html" data-lang="backLink">Back to Lotto Generator</a></p>
     </div>
 </body>
 </html>

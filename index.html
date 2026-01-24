@@ -7,12 +7,20 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="theme-manager.js" defer></script>
+    <script src="language-manager.js" defer></script>
 </head>
 <body>
+    <div class="top-right-controls">
+        <select id="language-switcher">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+            <option value="ja">日本語</option>
+        </select>
+    </div>
     <div class="main-container">
-        <h1>Lotto Number Generator</h1>
+        <h1 data-lang="lottoTitle">Lotto Number Generator</h1>
         <lotto-generator></lotto-generator>
-        <p><a href="contact.html">Contact Us</a></p>
+        <p><a href="contact.html" data-lang="contactLink">Contact Us</a></p>
     </div>
     <script src="main.js"></script>
 </body>

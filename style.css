@@ -9,6 +9,39 @@ body, html {
     background-color: #f0f2f5; /* A light, neutral background */
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     transition: background-color 0.3s ease;
+    position: relative; /* Needed for absolute positioning of top-right-controls */
+}
+
+/* Top Right Controls */
+.top-right-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Language Switcher */
+#language-switcher {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode #language-switcher {
+    background-color: #333;
+    border-color: #555;
+    color: #f0f2f5;
+}
+
+#language-switcher:hover {
+    border-color: #6a11cb;
 }
 
 /* Main container for the application */
@@ -48,22 +81,23 @@ body.dark-mode h1 {
 
 /* Theme Toggle Button */
 #theme-toggle {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1rem;
+    /* Existing button styles */
+    padding: 10px 15px; /* Slightly adjusted padding for consistency */
+    font-size: 0.9rem;
     font-weight: bold;
     color: white;
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     border: none;
-    border-radius: 50px;
+    border-radius: 20px; /* Adjusted border-radius for consistency */
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    /* Removed margin-top as it's now in a flex container */
 }
 
 #theme-toggle:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(37, 117, 252, 0.4);
+    transform: translateY(-2px); /* Slightly adjusted transform */
+    box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
 }
 
 /* Form Styles */
