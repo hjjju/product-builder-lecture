@@ -65,3 +65,93 @@ body.dark-mode h1 {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(37, 117, 252, 0.4);
 }
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333; /* Light mode label color */
+}
+
+body.dark-mode .form-group label {
+    color: #f0f2f5; /* Dark mode label color */
+}
+
+form input[type="text"],
+form input[type="email"],
+form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+body.dark-mode form input[type="text"],
+body.dark-mode form input[type="email"],
+body.dark-mode form textarea {
+    background-color: #333;
+    border-color: #555;
+    color: #f0f2f5;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form textarea:focus {
+    border-color: #6a11cb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+}
+
+form button[type="submit"] {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+}
+
+form button[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(37, 117, 252, 0.4);
+}
+
+form button[type="submit"]:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+}
+
+/* Link back to index.html */
+p a {
+    color: #6a11cb;
+    text-decoration: none;
+    margin-top: 20px;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+p a:hover {
+    color: #2575fc;
+    text-decoration: underline;
+}
