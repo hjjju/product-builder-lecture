@@ -1,40 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         en: {
-            lottoTitle: 'Lotto Number Generator',
+            menuTitle: 'What should I eat today?',
+            menuSubtitle: 'Get a quick menu suggestion in seconds.',
             contactLink: 'Contact Us',
             contactTitle: 'Contact Us',
             formName: 'Name:',
             formEmail: 'Email:',
             formMessage: 'Message:',
             formSubmit: 'Send Message',
-            backLink: 'Back to Lotto Generator',
+            backLink: 'Back to Menu Picker',
             themeToggle: 'Toggle Theme',
-            generateNumbers: 'Generate Numbers'
+            pickButton: 'Pick for me',
+            againButton: 'Pick another',
+            categoryLabel: 'Pick a category',
+            categoryAll: 'All',
+            categoryKorean: 'Korean',
+            categoryJapanese: 'Japanese',
+            categoryChinese: 'Chinese',
+            categoryWestern: 'Western',
+            categoryFast: 'Quick & Easy',
+            resultPlaceholder: 'Your menu suggestion appears here.'
         },
         ko: {
-            lottoTitle: '로또 번호 생성기',
+            menuTitle: '오늘 메뉴 뭐먹지',
+            menuSubtitle: '몇 초 만에 오늘의 메뉴를 추천받아 보세요.',
             contactLink: '문의하기',
             contactTitle: '문의하기',
             formName: '이름:',
             formEmail: '이메일:',
             formMessage: '메시지:',
             formSubmit: '메시지 보내기',
-            backLink: '로또 생성기로 돌아가기',
+            backLink: '메뉴 추천으로 돌아가기',
             themeToggle: '테마 변경',
-            generateNumbers: '번호 생성'
+            pickButton: '추천받기',
+            againButton: '다시 추천',
+            categoryLabel: '카테고리를 선택하세요',
+            categoryAll: '전체',
+            categoryKorean: '한식',
+            categoryJapanese: '일식',
+            categoryChinese: '중식',
+            categoryWestern: '양식',
+            categoryFast: '간편식',
+            resultPlaceholder: '오늘 메뉴 추천 결과가 여기 표시돼요.'
         },
         ja: {
-            lottoTitle: 'ロト番号ジェネレーター',
+            menuTitle: '今日のごはん、何にする？',
+            menuSubtitle: 'すぐに今日のメニューをおすすめします。',
             contactLink: 'お問い合わせ',
             contactTitle: 'お問い合わせ',
             formName: '名前:',
             formEmail: 'Eメール:',
             formMessage: 'メッセージ:',
             formSubmit: 'メッセージを送信',
-            backLink: 'ロトジェネレーターに戻る',
+            backLink: 'メニューおすすめに戻る',
             themeToggle: 'テーマの切り替え',
-            generateNumbers: '番号を生成'
+            pickButton: 'おすすめして',
+            againButton: 'もう一回',
+            categoryLabel: 'カテゴリを選んでください',
+            categoryAll: 'すべて',
+            categoryKorean: '韓国料理',
+            categoryJapanese: '日本料理',
+            categoryChinese: '中華',
+            categoryWestern: '洋食',
+            categoryFast: '手軽なメニュー',
+            resultPlaceholder: '今日のおすすめがここに表示されます。'
         }
     };
 
@@ -48,13 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Translate lotto-generator button
-        const lottoGenerator = document.querySelector('lotto-generator');
-        if (lottoGenerator && lottoGenerator.shadowRoot) {
-            const button = lottoGenerator.shadowRoot.getElementById('generate-btn');
-            if (button) {
-                button.textContent = translations[language].generateNumbers;
-            }
+        // Translate menu-picker component
+        const menuPicker = document.querySelector('menu-picker');
+        if (menuPicker && typeof menuPicker.setLanguage === 'function') {
+            menuPicker.setLanguage(language);
         }
 
         // Translate theme toggle button
