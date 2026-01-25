@@ -1,4 +1,4 @@
-const MODEL_BASE_URL = 'https://teachablemachine.withgoogle.com/models/iYm3BYzeP/';
+const MODEL_BASE_URL = 'https://teachablemachine.withgoogle.com/models/I5ePfTeg-/';
 
 const modelURL = `${MODEL_BASE_URL}model.json`;
 const metadataURL = `${MODEL_BASE_URL}metadata.json`;
