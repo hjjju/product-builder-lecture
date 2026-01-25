@@ -4,14 +4,8 @@ const modelURL = `${MODEL_BASE_URL}model.json`;
 const metadataURL = `${MODEL_BASE_URL}metadata.json`;
 
 let model;
-let webcam;
-let isWebcamRunning = false;
-
-const webcamContainer = document.getElementById('webcam-container');
 const resultMain = document.getElementById('result-main');
 const resultBars = document.getElementById('result-bars');
-const startCameraBtn = document.getElementById('start-camera');
-const stopCameraBtn = document.getElementById('stop-camera');
 const uploadInput = document.getElementById('upload-input');
 const previewImage = document.getElementById('preview-image');
 
@@ -37,17 +31,14 @@ const labelTranslations = {
 
 const uiTranslations = {
     en: {
-        cameraPlaceholder: 'Camera preview will appear here.',
         loadingModel: 'Loading model...',
         resultPrefix: 'Your vibe: '
     },
     ko: {
-        cameraPlaceholder: '카메라 화면이 여기에 표시돼요.',
         loadingModel: '모델 불러오는 중...',
         resultPrefix: '오늘의 분위기: '
     },
     ja: {
-        cameraPlaceholder: 'カメラ映像がここに表示されます。',
         loadingModel: 'モデルを読み込み中...',
         resultPrefix: '今日の雰囲気: '
     }
@@ -101,38 +92,6 @@ async function predictWithImage(image) {
     updateResult(predictions);
 }
 
-async function startCamera() {
-    if (isWebcamRunning) return;
-    const loadedModel = await loadModel();
-
-    webcam = new tmImage.Webcam(320, 320, true);
-    await webcam.setup();
-    await webcam.play();
-
-    isWebcamRunning = true;
-    webcamContainer.innerHTML = '';
-    webcamContainer.appendChild(webcam.canvas);
-
-    const loop = async () => {
-        if (!isWebcamRunning) return;
-        webcam.update();
-        const predictions = await loadedModel.predict(webcam.canvas);
-        updateResult(predictions);
-        requestAnimationFrame(loop);
-    };
-
-    loop();
-}
-
-function stopCamera() {
-    if (!isWebcamRunning) return;
-    isWebcamRunning = false;
-    if (webcam) {
-        webcam.stop();
-    }
-    webcamContainer.innerHTML = `<span>${getUILabel('cameraPlaceholder')}</span>`;
-}
-
 function handleUpload(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
@@ -148,17 +107,11 @@ function handleUpload(event) {
 
 function syncLanguage(language) {
     state.language = language;
-    if (!isWebcamRunning && !previewImage.src) {
+    if (!previewImage.src) {
         resultMain.textContent = '-';
-    }
-    const placeholder = webcamContainer.querySelector('span');
-    if (placeholder) {
-        placeholder.textContent = getUILabel('cameraPlaceholder');
     }
 }
 
-startCameraBtn.addEventListener('click', startCamera);
-stopCameraBtn.addEventListener('click', stopCamera);
 uploadInput.addEventListener('change', handleUpload);
 
 document.addEventListener('language-change', (event) => {
