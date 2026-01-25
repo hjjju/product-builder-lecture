@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         en: {
-            mealTitle: 'What should I eat today?',
+            mealTitle: 'What should I eat for breakfast, lunch, and dinner?',
             mealSubtitle: 'We recommend open, highly rated places near you by time of day.',
             locationBtn: 'Get recommendations near me',
             locationHelper: 'Allow location access to see open, top-rated places with photos.',
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             termsChangeText: 'We may update these terms and will post changes on the site.'
         },
         ko: {
-            mealTitle: '오늘 뭐 먹지?',
+            mealTitle: '오늘 아침·점심·저녁 뭐먹지?',
             mealSubtitle: '위치 기반으로 평이 좋은 음식점을 시간대별로 추천해드려요.',
             locationBtn: '내 위치로 추천받기',
             locationHelper: '위치 사용에 동의하면 현재 영업 중인 맛집과 사진을 보여드려요.',
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             termsChangeText: '운영자는 필요 시 약관을 변경할 수 있으며, 변경 사항은 사이트에 게시합니다.'
         },
         ja: {
-            mealTitle: '今日、何を食べる？',
+            mealTitle: '朝・昼・夜、何を食べる？',
             mealSubtitle: '時間帯ごとに近くの人気店をおすすめします。',
             locationBtn: '近くのおすすめを見る',
             locationHelper: '位置情報を許可すると営業中のおすすめを表示します。',
