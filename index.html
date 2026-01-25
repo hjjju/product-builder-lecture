@@ -23,32 +23,30 @@
         <a class="top-link" href="animal-face.html" data-lang="animalTestLink">Animal Face Test</a>
     </div>
     <div class="main-container">
-        <h1 data-lang="mealTitle">오늘 아침·점심·저녁 뭐먹지?</h1>
+        <h1 id="meal-title">오늘 점심 뭐 먹지?</h1>
         <p class="subtitle" data-lang="mealSubtitle">위치 기반으로 평이 좋은 음식점을 시간대별로 추천해드려요.</p>
         <button class="primary-cta" id="location-btn" data-lang="locationBtn">내 위치로 추천받기</button>
         <p class="helper-text" id="location-status" data-lang="locationHelper">위치 사용에 동의하면 현재 영업 중인 맛집과 사진을 보여드려요.</p>
-    <div class="action-links">
+        <div class="action-links">
             <a href="contact.html" data-lang="contactLink">Contact Us</a>
         </div>
     </div>
+    <section class="content-section recommendation-section">
+        <h2 id="recommend-title" data-lang="recommendTitle">지금 시간대 추천</h2>
+        <p data-lang="recommendSubtitle">추천받기 버튼을 누르면 현재 시간대에 맞는 음식점을 보여드립니다.</p>
+        <div class="place-list" id="recommend-list"></div>
+    </section>
     <section class="content-section">
-        <h2 id="time-label" data-lang="timeLabel">지금은 점심 추천 시간이에요</h2>
-        <p data-lang="timeIntro">아침/점심/저녁 각각에 맞는 음식점과 메뉴를 사진과 함께 보여드립니다.</p>
-        <div class="meal-grid">
-            <div class="meal-block">
-                <h3 data-lang="breakfastTitle">오늘 아침 뭐먹지</h3>
-                <div class="place-list" id="breakfast-list"></div>
-            </div>
-            <div class="meal-block">
-                <h3 data-lang="lunchTitle">오늘 점심 뭐먹지</h3>
-                <div class="place-list" id="lunch-list"></div>
-            </div>
-            <div class="meal-block">
-                <h3 data-lang="dinnerTitle">오늘 저녁 뭐먹지</h3>
-                <div class="place-list" id="dinner-list"></div>
-            </div>
-        </div>
-        <p class="helper-text" data-lang="menuNote">메뉴 상세는 각 음식점 링크에서 확인할 수 있어요.</p>
+        <h2 data-lang="openListTitle">현재 영업 중인 음식점</h2>
+        <p data-lang="openListSubtitle">가까운 곳에서 평점과 리뷰 기반으로 선별한 목록입니다.</p>
+        <div class="place-list" id="open-list"></div>
+        <p class="helper-text" data-lang="reviewNote">맛/청결/추천 메뉴 요약은 리뷰 키워드를 기반으로 추정됩니다.</p>
+    </section>
+    <section class="content-section dessert-section">
+        <h2 data-lang="dessertTitle">식사 후에는 이런 디저트 어때요?</h2>
+        <p data-lang="dessertSubtitle">평점이 높은 카페와 사진을 골라 보여드립니다.</p>
+        <div class="place-list" id="dessert-list"></div>
+        <p class="helper-text" data-lang="dessertNote">사진은 Google 제공 이미지이며 매장/메뉴 사진일 수 있습니다.</p>
     </section>
     <div id="disqus_thread"></div>
     <script>
