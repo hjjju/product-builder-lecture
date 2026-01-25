@@ -1,223 +1,228 @@
-class MenuPicker extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
+const MEAL_CONFIG = {
+    breakfast: { keyword: 'breakfast cafe brunch', minRating: 4.2 },
+    lunch: { keyword: 'lunch restaurant', minRating: 4.1 },
+    dinner: { keyword: 'dinner restaurant', minRating: 4.1 }
+};
 
-        const template = document.createElement('template');
-        template.innerHTML = `
-            <style>
-                .menu-card {
-                    display: grid;
-                    gap: 16px;
-                    justify-items: center;
-                }
+const MAX_RESULTS = 6;
 
-                .controls {
-                    display: grid;
-                    gap: 12px;
-                    width: min(520px, 90vw);
-                }
+const locationBtn = document.getElementById('location-btn');
+const locationStatus = document.getElementById('location-status');
+const timeLabel = document.getElementById('time-label');
 
-                label {
-                    font-weight: 600;
-                    color: #333;
-                }
+const lists = {
+    breakfast: document.getElementById('breakfast-list'),
+    lunch: document.getElementById('lunch-list'),
+    dinner: document.getElementById('dinner-list')
+};
 
-                select {
-                    padding: 10px 14px;
-                    border-radius: 12px;
-                    border: 1px solid #ddd;
-                    font-size: 1rem;
-                    background: #f9f9f9;
-                }
+const state = {
+    language: localStorage.getItem('language') || 'en',
+    placesService: null
+};
 
-                .result {
-                    font-size: 1.6rem;
-                    font-weight: 700;
-                    color: #2d2d2d;
-                    background: #f3f6ff;
-                    padding: 16px 24px;
-                    border-radius: 14px;
-                    min-height: 56px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
-                }
+const timeMessages = {
+    en: {
+        breakfast: 'It is breakfast time now',
+        lunch: 'It is lunch time now',
+        dinner: 'It is dinner time now'
+    },
+    ko: {
+        breakfast: '지금은 아침 추천 시간이에요',
+        lunch: '지금은 점심 추천 시간이에요',
+        dinner: '지금은 저녁 추천 시간이에요'
+    },
+    ja: {
+        breakfast: '今は朝ごはんの時間です',
+        lunch: '今は昼ごはんの時間です',
+        dinner: '今は夕ごはんの時間です'
+    }
+};
 
-                button {
-                    padding: 12px 22px;
-                    font-size: 1rem;
-                    font-weight: bold;
-                    color: white;
-                    background: linear-gradient(135deg, #2575fc, #6a11cb);
-                    border: none;
-                    border-radius: 999px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-                }
+const statusMessages = {
+    en: {
+        ready: 'Allow location access to see open, top-rated places near you.',
+        loading: 'Finding open places near you...',
+        denied: 'Location access is required to show nearby recommendations.',
+        error: 'Could not fetch places. Please try again later.'
+    },
+    ko: {
+        ready: '위치 사용에 동의하면 현재 영업 중인 맛집과 사진을 보여드려요.',
+        loading: '주변의 영업 중인 음식점을 찾고 있어요...',
+        denied: '위치 정보가 필요합니다. 브라우저에서 허용해 주세요.',
+        error: '추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
+    },
+    ja: {
+        ready: '位置情報の許可で営業中のおすすめを表示します。',
+        loading: '近くの営業中のお店を探しています...',
+        denied: '位置情報の許可が必要です。',
+        error: 'おすすめを取得できませんでした。'
+    }
+};
 
-                button:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 20px rgba(37, 117, 252, 0.35);
-                }
+const labels = {
+    en: {
+        openNow: 'Open now',
+        closed: 'Closed',
+        rating: 'Rating',
+        reviews: 'reviews',
+        view: 'View',
+        miles: 'mi',
+        emptyState: 'No recommendations available yet.'
+    },
+    ko: {
+        openNow: '영업 중',
+        closed: '영업 종료',
+        rating: '평점',
+        reviews: '리뷰',
+        view: '보기',
+        miles: '마일',
+        emptyState: '추천할 음식점이 없습니다.'
+    },
+    ja: {
+        openNow: '営業中',
+        closed: '営業時間外',
+        rating: '評価',
+        reviews: 'レビュー',
+        view: '見る',
+        miles: 'マイル',
+        emptyState: 'おすすめのお店が見つかりませんでした。'
+    }
+};
 
-                button:active {
-                    transform: translateY(-1px);
-                    box-shadow: 0 5px 15px rgba(37, 117, 252, 0.25);
-                }
+function getText(map, key) {
+    const t = map[state.language] || map.en;
+    return t[key] || '';
+}
 
-                .secondary {
-                    background: #ffffff;
-                    color: #4a4a4a;
-                    border: 1px solid #e2e2e2;
-                    box-shadow: none;
-                }
+function setStatus(key) {
+    locationStatus.textContent = getText(statusMessages, key);
+}
 
-                @media (prefers-color-scheme: dark) {
-                    label {
-                        color: #e6e6e6;
-                    }
-                }
-            </style>
-            <div class="menu-card">
-                <div class="controls">
-                    <label id="category-label" for="category"></label>
-                    <select id="category">
-                        <option value="all" id="opt-all"></option>
-                        <option value="korean" id="opt-korean"></option>
-                        <option value="japanese" id="opt-japanese"></option>
-                        <option value="chinese" id="opt-chinese"></option>
-                        <option value="western" id="opt-western"></option>
-                        <option value="fast" id="opt-fast"></option>
-                    </select>
-                </div>
-                <div class="result" id="result" aria-live="polite"></div>
-                <button id="pick-btn"></button>
-                <button id="again-btn" class="secondary"></button>
+function updateTimeLabel() {
+    const hour = new Date().getHours();
+    const current = hour < 10 ? 'breakfast' : hour < 16 ? 'lunch' : 'dinner';
+    timeLabel.textContent = getText(timeMessages, current);
+}
+
+function initPlacesService() {
+    if (state.placesService) return;
+    const map = document.createElement('div');
+    map.style.display = 'none';
+    document.body.appendChild(map);
+    state.placesService = new google.maps.places.PlacesService(map);
+}
+
+function buildPhotoUrl(photo) {
+    if (!photo) return '';
+    return photo.getUrl({ maxWidth: 480, maxHeight: 360 });
+}
+
+function buildCard(place) {
+    const t = labels[state.language] || labels.en;
+    const photo = place.photos && place.photos.length ? buildPhotoUrl(place.photos[0]) : '';
+    const openNow = place.opening_hours && place.opening_hours.open_now;
+    const rating = place.rating ? place.rating.toFixed(1) : '-';
+    const reviews = place.user_ratings_total ? place.user_ratings_total : 0;
+    const distance = place.distance ? (place.distance / 1609.34).toFixed(1) : null;
+    const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.place_id}`;
+
+    return `
+        <article class="place-card">
+            <div class="place-photo">
+                ${photo ? `<img src="${photo}" alt="${place.name}">` : `<div class="photo-placeholder"></div>`}
             </div>
-        `;
+            <div class="place-info">
+                <h4>${place.name}</h4>
+                <div class="place-meta">
+                    <span class="badge ${openNow ? 'open' : 'closed'}">${openNow ? t.openNow : t.closed}</span>
+                    <span>${t.rating} ${rating} (${reviews} ${t.reviews})</span>
+                    ${distance ? `<span>${distance}${t.miles}</span>` : ''}
+                </div>
+                <div class="place-tags">${place.types ? place.types.slice(0, 3).map(type => `<span>${type.replace(/_/g, ' ')}</span>`).join('') : ''}</div>
+                <a class="place-link" href="${mapLink}" target="_blank" rel="noopener">${t.view}</a>
+            </div>
+        </article>
+    `;
+}
 
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
-
-        this.categorySelect = this.shadowRoot.getElementById('category');
-        this.resultEl = this.shadowRoot.getElementById('result');
-        this.pickBtn = this.shadowRoot.getElementById('pick-btn');
-        this.againBtn = this.shadowRoot.getElementById('again-btn');
+function renderList(target, places) {
+    if (!places.length) {
+        const t = labels[state.language] || labels.en;
+        target.innerHTML = `<p class="empty-state">${t.emptyState}</p>`;
+        return;
     }
+    target.innerHTML = places.map(buildCard).join('');
+}
 
-    connectedCallback() {
-        const savedLanguage = localStorage.getItem('language') || 'en';
-        this.setLanguage(savedLanguage);
-        this.pickBtn.addEventListener('click', () => this.pickMenu());
-        this.againBtn.addEventListener('click', () => this.pickMenu());
-    }
+function nearbySearch({ location, keyword, minRating }, callback) {
+    const request = {
+        location,
+        radius: 2500,
+        type: 'restaurant',
+        keyword,
+        openNow: true
+    };
 
-    setLanguage(language) {
-        this.currentLanguage = language;
-        const t = this.getTranslations(language);
-
-        this.shadowRoot.getElementById('category-label').textContent = t.categoryLabel;
-        this.shadowRoot.getElementById('opt-all').textContent = t.categoryAll;
-        this.shadowRoot.getElementById('opt-korean').textContent = t.categoryKorean;
-        this.shadowRoot.getElementById('opt-japanese').textContent = t.categoryJapanese;
-        this.shadowRoot.getElementById('opt-chinese').textContent = t.categoryChinese;
-        this.shadowRoot.getElementById('opt-western').textContent = t.categoryWestern;
-        this.shadowRoot.getElementById('opt-fast').textContent = t.categoryFast;
-
-        this.pickBtn.textContent = t.pickButton;
-        this.againBtn.textContent = t.againButton;
-        this.resultEl.textContent = t.resultPlaceholder;
-    }
-
-    getTranslations(language) {
-        const translations = {
-            en: {
-                categoryLabel: 'Pick a category',
-                categoryAll: 'All',
-                categoryKorean: 'Korean',
-                categoryJapanese: 'Japanese',
-                categoryChinese: 'Chinese',
-                categoryWestern: 'Western',
-                categoryFast: 'Quick & Easy',
-                pickButton: 'Pick for me',
-                againButton: 'Pick another',
-                resultPlaceholder: 'Your menu suggestion appears here.'
-            },
-            ko: {
-                categoryLabel: '카테고리를 선택하세요',
-                categoryAll: '전체',
-                categoryKorean: '한식',
-                categoryJapanese: '일식',
-                categoryChinese: '중식',
-                categoryWestern: '양식',
-                categoryFast: '간편식',
-                pickButton: '추천받기',
-                againButton: '다시 추천',
-                resultPlaceholder: '오늘 메뉴 추천 결과가 여기 표시돼요.'
-            },
-            ja: {
-                categoryLabel: 'カテゴリを選んでください',
-                categoryAll: 'すべて',
-                categoryKorean: '韓国料理',
-                categoryJapanese: '日本料理',
-                categoryChinese: '中華',
-                categoryWestern: '洋食',
-                categoryFast: '手軽なメニュー',
-                pickButton: 'おすすめして',
-                againButton: 'もう一回',
-                resultPlaceholder: '今日のおすすめがここに表示されます。'
-            }
-        };
-
-        return translations[language] || translations.en;
-    }
-
-    getMenus(language) {
-        const menus = {
-            en: {
-                korean: ['Kimchi stew', 'Bibimbap', 'Bulgogi', 'Tteokbokki', 'Kimbap'],
-                japanese: ['Sushi', 'Ramen', 'Katsu curry', 'Udon', 'Soba'],
-                chinese: ['Jajangmyeon', 'Sweet & sour pork', 'Mapo tofu', 'Fried rice', 'Dim sum'],
-                western: ['Pasta', 'Steak', 'Burger', 'Salad bowl', 'Pizza'],
-                fast: ['Sandwich', 'Chicken wrap', 'Cupbap', 'Gimbap', 'Tacos']
-            },
-            ko: {
-                korean: ['김치찌개', '비빔밥', '불고기', '떡볶이', '김밥'],
-                japanese: ['스시', '라멘', '카레돈까스', '우동', '소바'],
-                chinese: ['짜장면', '탕수육', '마파두부', '볶음밥', '딤섬'],
-                western: ['파스타', '스테이크', '버거', '샐러드볼', '피자'],
-                fast: ['샌드위치', '치킨 랩', '컵밥', '김밥', '타코']
-            },
-            ja: {
-                korean: ['キムチチゲ', 'ビビンバ', 'プルコギ', 'トッポッキ', 'キンパ'],
-                japanese: ['寿司', 'ラーメン', 'カツカレー', 'うどん', 'そば'],
-                chinese: ['ジャージャー麺', '酢豚', '麻婆豆腐', 'チャーハン', '点心'],
-                western: ['パスタ', 'ステーキ', 'ハンバーガー', 'サラダボウル', 'ピザ'],
-                fast: ['サンドイッチ', 'チキンラップ', 'カップバップ', 'キンパ', 'タコス']
-            }
-        };
-
-        return menus[language] || menus.en;
-    }
-
-    pickMenu() {
-        const menus = this.getMenus(this.currentLanguage);
-        const category = this.categorySelect.value;
-        const allMenus = category === 'all'
-            ? Object.values(menus).flat()
-            : menus[category] || [];
-
-        if (!allMenus.length) {
-            this.resultEl.textContent = 'No menu available.';
+    state.placesService.nearbySearch(request, (results, status) => {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+            callback([]);
             return;
         }
 
-        const choice = allMenus[Math.floor(Math.random() * allMenus.length)];
-        this.resultEl.textContent = choice;
-    }
+        const filtered = results
+            .filter(place => place.rating && place.rating >= minRating)
+            .slice(0, MAX_RESULTS);
+
+        callback(filtered);
+    });
 }
 
-customElements.define('menu-picker', MenuPicker);
+function runSearches(position) {
+    const location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    initPlacesService();
+
+    nearbySearch({ location, ...MEAL_CONFIG.breakfast }, results => renderList(lists.breakfast, results));
+    nearbySearch({ location, ...MEAL_CONFIG.lunch }, results => renderList(lists.lunch, results));
+    nearbySearch({ location, ...MEAL_CONFIG.dinner }, results => renderList(lists.dinner, results));
+}
+
+function handleLocationSuccess(position) {
+    if (!window.google || !google.maps || !google.maps.places) {
+        setStatus('error');
+        return;
+    }
+    setStatus('loading');
+    updateTimeLabel();
+    runSearches(position);
+    setTimeout(() => {
+        setStatus('ready');
+    }, 800);
+}
+
+function handleLocationError() {
+    setStatus('denied');
+}
+
+function requestLocation() {
+    if (!navigator.geolocation) {
+        setStatus('error');
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError, {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 300000
+    });
+}
+
+locationBtn.addEventListener('click', requestLocation);
+updateTimeLabel();
+setStatus('ready');
+
+document.addEventListener('language-change', event => {
+    state.language = event.detail.language;
+    setStatus('ready');
+    updateTimeLabel();
+});
