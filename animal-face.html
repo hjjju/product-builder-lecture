@@ -16,11 +16,26 @@
 </head>
 <body class="animal-face-page">
     <div class="top-right-controls">
-        <select id="language-switcher">
-            <option value="en">🇺🇸 EN</option>
-            <option value="ko">🇰🇷 KOR</option>
-            <option value="ja">🇯🇵 JP</option>
-        </select>
+                <div id="language-switcher" class="language-switcher">
+            <button class="lang-toggle" type="button" aria-haspopup="listbox" aria-expanded="false">
+                <img class="lang-flag" src="assets/flags/us.svg" alt="United States flag">
+                <span class="lang-code">EN</span>
+            </button>
+            <ul class="lang-menu" role="listbox" aria-label="Language">
+                <li class="lang-option" role="option" data-value="en" aria-selected="true">
+                    <img class="lang-flag" src="assets/flags/us.svg" alt="United States flag">
+                    <span class="lang-code">EN</span>
+                </li>
+                <li class="lang-option" role="option" data-value="ko" aria-selected="false">
+                    <img class="lang-flag" src="assets/flags/kr.svg" alt="South Korea flag">
+                    <span class="lang-code">KOR</span>
+                </li>
+                <li class="lang-option" role="option" data-value="ja" aria-selected="false">
+                    <img class="lang-flag" src="assets/flags/jp.svg" alt="Japan flag">
+                    <span class="lang-code">JP</span>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="main-container">
         <h1 data-lang="animalTestTitle">Animal Face Test</h1>

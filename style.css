@@ -51,24 +51,94 @@ body, html {
 }
 
 /* Language Switcher */
-#language-switcher {
+.language-switcher {
+    position: relative;
+}
+
+.lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 12px;
     border-radius: 20px;
     border: 1px solid #ccc;
-    background-color: white;
+    background-color: #ffffff;
     cursor: pointer;
     font-size: 0.9rem;
+    font-weight: 600;
     transition: all 0.3s ease;
 }
 
-body.dark-mode #language-switcher {
+.lang-toggle:hover {
+    border-color: #6a11cb;
+}
+
+.lang-flag {
+    width: 18px;
+    height: 12px;
+    border-radius: 2px;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.lang-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 140px;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    display: none;
+    z-index: 1001;
+}
+
+.language-switcher.open .lang-menu {
+    display: block;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-option:hover {
+    background: #f4f6ff;
+}
+
+.lang-option[aria-selected="true"] {
+    background: #e9edff;
+    color: #2a3b8f;
+}
+
+body.dark-mode .lang-toggle {
     background-color: #333;
     border-color: #555;
     color: #f0f2f5;
 }
 
-#language-switcher:hover {
-    border-color: #6a11cb;
+body.dark-mode .lang-menu {
+    background: #2b2b2b;
+    border-color: #444;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .lang-option:hover {
+    background: #3b3b3b;
+}
+
+body.dark-mode .lang-option[aria-selected="true"] {
+    background: #434a66;
+    color: #e6ebff;
 }
 
 /* Main container for the application */

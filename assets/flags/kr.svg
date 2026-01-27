@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="South Korea flag">
+  <rect width="640" height="480" fill="#ffffff"/>
+  <g transform="translate(320 240)">
+    <path d="M0-120A120 120 0 0 1 0 120A60 60 0 0 0 0 0A60 60 0 0 1 0-120Z" fill="#cd2e3a"/>
+    <path d="M0 120A120 120 0 0 1 0-120A60 60 0 0 0 0 0A60 60 0 0 1 0 120Z" fill="#0047a0"/>
+  </g>
+  <g fill="#000000">
+    <rect x="88" y="96" width="84" height="12"/>
+    <rect x="88" y="120" width="84" height="12"/>
+    <rect x="88" y="144" width="84" height="12"/>
+    <rect x="468" y="96" width="84" height="12"/>
+    <rect x="468" y="120" width="84" height="12"/>
+    <rect x="468" y="144" width="84" height="12"/>
+    <rect x="88" y="324" width="84" height="12"/>
+    <rect x="88" y="348" width="84" height="12"/>
+    <rect x="88" y="372" width="84" height="12"/>
+    <rect x="468" y="324" width="84" height="12"/>
+    <rect x="468" y="348" width="84" height="12"/>
+    <rect x="468" y="372" width="84" height="12"/>
+  </g>
+</svg>

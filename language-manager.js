@@ -330,6 +330,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const languageSwitcher = document.getElementById('language-switcher');
+    const languageToggle = languageSwitcher ? languageSwitcher.querySelector('.lang-toggle') : null;
+    const languageMenu = languageSwitcher ? languageSwitcher.querySelector('.lang-menu') : null;
+    const languageOptions = languageSwitcher
+        ? Array.from(languageSwitcher.querySelectorAll('.lang-option'))
+        : [];
+
+    const closeLanguageMenu = () => {
+        if (!languageSwitcher || !languageToggle) {
+            return;
+        }
+        languageSwitcher.classList.remove('open');
+        languageToggle.setAttribute('aria-expanded', 'false');
+    };
 
     const setLanguage = (language) => {
         document.querySelectorAll('[data-lang]').forEach(element => {
@@ -356,16 +369,63 @@ document.addEventListener('DOMContentLoaded', () => {
         if (themeToggle) {
             themeToggle.textContent = translations[language].themeToggle;
         }
+
+        if (languageSwitcher && languageToggle) {
+            languageOptions.forEach(option => {
+                option.setAttribute(
+                    'aria-selected',
+                    option.dataset.value === language ? 'true' : 'false'
+                );
+            });
+
+            const selectedOption = languageOptions.find(option => option.dataset.value === language);
+            if (selectedOption) {
+                const selectedFlag = selectedOption.querySelector('.lang-flag');
+                const selectedCode = selectedOption.querySelector('.lang-code');
+                const toggleFlag = languageToggle.querySelector('.lang-flag');
+                const toggleCode = languageToggle.querySelector('.lang-code');
+
+                if (selectedFlag && toggleFlag) {
+                    toggleFlag.src = selectedFlag.src;
+                    toggleFlag.alt = selectedFlag.alt;
+                }
+                if (selectedCode && toggleCode) {
+                    toggleCode.textContent = selectedCode.textContent;
+                }
+                languageToggle.dataset.value = language;
+            }
+        }
     };
 
-    languageSwitcher.addEventListener('change', (event) => {
-        const selectedLanguage = event.target.value;
-        localStorage.setItem('language', selectedLanguage);
-        setLanguage(selectedLanguage);
-    });
+    if (languageSwitcher && languageToggle && languageMenu) {
+        languageToggle.addEventListener('click', () => {
+            const isOpen = languageSwitcher.classList.toggle('open');
+            languageToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        languageOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const selectedLanguage = option.dataset.value;
+                localStorage.setItem('language', selectedLanguage);
+                setLanguage(selectedLanguage);
+                closeLanguageMenu();
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!languageSwitcher.contains(event.target)) {
+                closeLanguageMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeLanguageMenu();
+            }
+        });
+    }
 
     // Set initial language
     const savedLanguage = localStorage.getItem('language') || 'en';
-    languageSwitcher.value = savedLanguage;
     setLanguage(savedLanguage);
 });
