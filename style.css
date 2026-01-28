@@ -982,6 +982,30 @@ body.dark-mode .result-bar .value {
     .photo-strip img {
         height: 72px;
     }
+
+    .animal-card {
+        gap: 16px;
+    }
+
+    .camera-panel,
+    .upload-panel,
+    .result-panel {
+        padding: 12px;
+        box-shadow: 6px 6px 0 rgba(11, 11, 11, 0.08);
+    }
+
+    .webcam-frame {
+        min-height: 240px;
+    }
+
+    .camera-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .animal-card button {
+        width: 100%;
+    }
 }
 
 /* Retro OS UI */
@@ -1342,6 +1366,14 @@ body.retro-os .retro-top-row {
 
     .retro-os h1 {
         font-size: 1.9rem;
+    }
+
+    .webcam-frame {
+        min-height: 210px;
+    }
+
+    .retro-os.retro-os-lab .animal-card {
+        padding: 12px;
     }
 }
 
