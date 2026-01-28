@@ -13,7 +13,26 @@
     <script src="language-manager.js" defer></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKD9eThqYRs8Aswm_Fk-RmS1jtssqsSjU&libraries=places" defer></script>
 </head>
-<body>
+<body class="retro-os">
+    <div class="os-frame">
+        <header class="os-titlebar">
+            <div class="os-title">
+                <span class="os-icon"></span>
+                <span>Retro OS · Menu Picker</span>
+            </div>
+            <div class="os-controls">
+                <span class="os-btn"></span>
+                <span class="os-btn"></span>
+                <span class="os-btn"></span>
+            </div>
+        </header>
+        <div class="os-menubar">
+            <button class="os-menu-item" type="button">File</button>
+            <button class="os-menu-item" type="button">Edit</button>
+            <button class="os-menu-item" type="button">View</button>
+            <button class="os-menu-item" type="button">Tools</button>
+            <button class="os-menu-item" type="button">Help</button>
+        </div>
     <div class="top-right-controls">
                 <div id="language-switcher" class="language-switcher">
             <button class="lang-toggle" type="button" aria-haspopup="listbox" aria-expanded="false">
@@ -88,5 +107,6 @@
         <a href="privacy.html" data-lang="footerPrivacy">개인정보 처리방침</a>
         <a href="terms.html" data-lang="footerTerms">이용약관</a>
     </footer>
+    </div>
 </body>
 </html>
