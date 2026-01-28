@@ -18,17 +18,20 @@ const labelTranslations = {
     en: {
         Cat: 'Cat',
         Dog: 'Dog',
-        Capybara: 'Capybara'
+        cat: 'Cat',
+        dog: 'Dog'
     },
     ko: {
         Cat: '고양이상',
         Dog: '강아지상',
-        Capybara: '카피바라상'
+        cat: '고양이상',
+        dog: '강아지상'
     },
     ja: {
         Cat: '猫っぽい',
         Dog: '犬っぽい',
-        Capybara: 'カピバラっぽい'
+        cat: '猫っぽい',
+        dog: '犬っぽい'
     }
 };
 
