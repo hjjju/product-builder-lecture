@@ -34,7 +34,10 @@ body, html {
 }
 
 .top-link {
-    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
     border-radius: 999px;
     font-size: 0.85rem;
     font-weight: 600;
@@ -59,7 +62,8 @@ body, html {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    height: 36px;
+    padding: 0 12px;
     border-radius: 20px;
     border: 1px solid #ccc;
     background-color: #ffffff;
