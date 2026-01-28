@@ -64,6 +64,10 @@ function translateLabel(label) {
 async function loadModel() {
     if (model) return model;
     resultMain.textContent = getUILabel('loadingModel');
+    if (!window.tmImage || typeof window.tmImage.load !== 'function') {
+        resultMain.textContent = 'Model library failed to load.';
+        throw new Error('tmImage is not available. Check script loading.');
+    }
     model = await tmImage.load(modelURL, metadataURL);
     return model;
 }
