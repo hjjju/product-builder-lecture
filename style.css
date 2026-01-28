@@ -1005,6 +1005,8 @@ body.dark-mode .result-bar .value {
 
     .animal-card button {
         width: 100%;
+        font-size: 0.95rem;
+        padding: 0 16px;
     }
 }
 
@@ -1368,6 +1370,11 @@ body.retro-os .retro-top-row {
         justify-self: end;
         width: auto;
     }
+
+    .animal-face-page .animal-card button {
+        height: 44px;
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 360px) {
@@ -1390,6 +1397,11 @@ body.retro-os .retro-top-row {
 
     .retro-os.retro-os-lab .animal-card {
         padding: 12px;
+    }
+
+    .animal-face-page .animal-card button {
+        height: 42px;
+        font-size: 0.9rem;
     }
 }
 
