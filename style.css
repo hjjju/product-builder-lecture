@@ -1352,6 +1352,22 @@ body.retro-os .retro-top-row {
     .retro-os .primary-cta {
         width: 100%;
     }
+
+    .animal-face-page .retro-top-row {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
+
+    .animal-face-page .retro-top-row .top-right-controls {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .animal-face-page .retro-top-row .retro-nav-slot {
+        grid-column: 2;
+        justify-self: end;
+        width: auto;
+    }
 }
 
 @media (max-width: 360px) {
