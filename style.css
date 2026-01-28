@@ -5,10 +5,16 @@
     box-sizing: border-box;
 }
 
+:root {
+    --btn-height: 44px;
+    --btn-padding-x: 22px;
+    --btn-radius: 999px;
+}
+
 body, html {
     min-height: 100%;
     margin: 0;
-    font-family: 'Montserrat', sans-serif; /* A modern, clean font */
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,9 +42,10 @@ body, html {
 .top-link {
     display: inline-flex;
     align-items: center;
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 999px;
+    justify-content: center;
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding-x);
+    border-radius: var(--btn-radius);
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
@@ -62,9 +69,10 @@ body, html {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 20px;
+    justify-content: center;
+    height: var(--btn-height);
+    padding: 0 calc(var(--btn-padding-x) - 4px);
+    border-radius: var(--btn-radius);
     border: 1px solid #ccc;
     background-color: #ffffff;
     cursor: pointer;
@@ -200,8 +208,12 @@ body.dark-mode .subtitle {
 }
 
 .primary-cta {
-    padding: 12px 26px;
-    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--btn-height);
+    padding: 0 calc(var(--btn-padding-x) + 6px);
+    border-radius: var(--btn-radius);
     font-size: 1rem;
     font-weight: 700;
     border: none;
@@ -228,8 +240,12 @@ body.dark-mode .helper-text {
 }
 
 .primary-link {
-    padding: 10px 20px;
-    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding-x);
+    border-radius: var(--btn-radius);
     font-weight: 600;
     color: #ffffff;
     background: linear-gradient(135deg, #ff7a18, #ffb347);
@@ -562,13 +578,17 @@ form textarea:focus {
 }
 
 form button[type="submit"] {
-    padding: 15px 30px;
-    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--btn-height);
+    padding: 0 calc(var(--btn-padding-x) + 10px);
+    font-size: 1rem;
     font-weight: bold;
     color: white;
     background: linear-gradient(135deg, #2575fc, #6a11cb);
     border: none;
-    border-radius: 50px;
+    border-radius: var(--btn-radius);
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -664,13 +684,17 @@ body.dark-mode .webcam-frame {
 }
 
 .animal-card button {
-    padding: 12px 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding-x);
     font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
     background: linear-gradient(135deg, #2575fc, #6a11cb);
     border: none;
-    border-radius: 999px;
+    border-radius: var(--btn-radius);
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
