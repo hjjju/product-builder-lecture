@@ -11,7 +11,8 @@ const previewImage = document.getElementById('preview-image');
 
 const state = {
     language: localStorage.getItem('language') || 'en',
-    labelMap: null
+    labelMap: null,
+    lastPredictions: null
 };
 
 const labelTranslations = {
@@ -38,15 +39,18 @@ const labelTranslations = {
 const uiTranslations = {
     en: {
         loadingModel: 'Loading model...',
-        resultPrefix: 'Your vibe: '
+        resultPrefix: 'Your vibe: ',
+        modelLoadError: 'Model library failed to load.'
     },
     ko: {
         loadingModel: '모델 불러오는 중...',
-        resultPrefix: '오늘의 분위기: '
+        resultPrefix: '오늘의 분위기: ',
+        modelLoadError: '모델 라이브러리를 불러오지 못했습니다.'
     },
     ja: {
         loadingModel: 'モデルを読み込み中...',
-        resultPrefix: '今日の雰囲気: '
+        resultPrefix: '今日の雰囲気: ',
+        modelLoadError: 'モデルライブラリの読み込みに失敗しました。'
     }
 };
 
@@ -65,7 +69,7 @@ async function loadModel() {
     if (model) return model;
     resultMain.textContent = getUILabel('loadingModel');
     if (!window.tmImage || typeof window.tmImage.load !== 'function') {
-        resultMain.textContent = 'Model library failed to load.';
+        resultMain.textContent = getUILabel('modelLoadError');
         throw new Error('tmImage is not available. Check script loading.');
     }
     model = await tmImage.load(modelURL, metadataURL);
@@ -74,6 +78,8 @@ async function loadModel() {
 
 function updateResult(predictions) {
     if (!predictions || !predictions.length) return;
+
+    state.lastPredictions = predictions;
 
     const sorted = [...predictions].sort((a, b) => b.probability - a.probability);
     const top = sorted[0];
@@ -117,6 +123,11 @@ function handleUpload(event) {
 
 function syncLanguage(language) {
     state.language = language;
+    if (state.lastPredictions && state.lastPredictions.length) {
+        updateResult(state.lastPredictions);
+        return;
+    }
+
     if (!previewImage.src) {
         resultMain.textContent = '-';
     }
