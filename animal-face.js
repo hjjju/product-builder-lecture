@@ -8,11 +8,14 @@ const resultMain = document.getElementById('result-main');
 const resultBars = document.getElementById('result-bars');
 const uploadInput = document.getElementById('upload-input');
 const previewImage = document.getElementById('preview-image');
+const uploadStatus = document.getElementById('upload-status');
+const uploadButton = document.querySelector('.upload-button');
 
 const state = {
     language: localStorage.getItem('language') || 'en',
     labelMap: null,
-    lastPredictions: null
+    lastPredictions: null,
+    selectedFileName: ''
 };
 
 const labelTranslations = {
@@ -40,17 +43,23 @@ const uiTranslations = {
     en: {
         loadingModel: 'Loading model...',
         resultPrefix: 'Your vibe: ',
-        modelLoadError: 'Model library failed to load.'
+        modelLoadError: 'Model library failed to load.',
+        selectedFilePrefix: 'Selected file: ',
+        noFileSelected: 'No file selected'
     },
     ko: {
         loadingModel: '모델 불러오는 중...',
         resultPrefix: '오늘의 분위기: ',
-        modelLoadError: '모델 라이브러리를 불러오지 못했습니다.'
+        modelLoadError: '모델 라이브러리를 불러오지 못했습니다.',
+        selectedFilePrefix: '선택된 파일: ',
+        noFileSelected: '선택된 파일 없음'
     },
     ja: {
         loadingModel: 'モデルを読み込み中...',
         resultPrefix: '今日の雰囲気: ',
-        modelLoadError: 'モデルライブラリの読み込みに失敗しました。'
+        modelLoadError: 'モデルライブラリの読み込みに失敗しました。',
+        selectedFilePrefix: '選択したファイル: ',
+        noFileSelected: '選択されていません'
     }
 };
 
@@ -63,6 +72,15 @@ function translateLabel(label) {
     if (!label) return '';
     const map = labelTranslations[state.language] || labelTranslations.en;
     return map[label] || label;
+}
+
+function updateUploadStatus() {
+    if (!uploadStatus) return;
+    if (!state.selectedFileName) {
+        uploadStatus.textContent = getUILabel('noFileSelected');
+        return;
+    }
+    uploadStatus.textContent = `${getUILabel('selectedFilePrefix')}${state.selectedFileName}`;
 }
 
 async function loadModel() {
@@ -110,7 +128,14 @@ async function predictWithImage(image) {
 
 function handleUpload(event) {
     const file = event.target.files && event.target.files[0];
-    if (!file) return;
+    if (!file) {
+        state.selectedFileName = '';
+        updateUploadStatus();
+        return;
+    }
+
+    state.selectedFileName = file.name;
+    updateUploadStatus();
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -123,6 +148,7 @@ function handleUpload(event) {
 
 function syncLanguage(language) {
     state.language = language;
+    updateUploadStatus();
     if (state.lastPredictions && state.lastPredictions.length) {
         updateResult(state.lastPredictions);
         return;
@@ -134,6 +160,9 @@ function syncLanguage(language) {
 }
 
 uploadInput.addEventListener('change', handleUpload);
+if (uploadButton && uploadInput) {
+    uploadButton.addEventListener('click', () => uploadInput.click());
+}
 
 document.addEventListener('language-change', (event) => {
     syncLanguage(event.detail.language);

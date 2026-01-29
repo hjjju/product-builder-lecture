@@ -804,8 +804,7 @@ body.dark-mode .webcam-frame {
 }
 
 .upload-panel input[type="file"] {
-    width: 100%;
-    margin-top: 10px;
+    display: none;
 }
 
 .upload-label {
@@ -815,8 +814,72 @@ body.dark-mode .webcam-frame {
     color: #333;
 }
 
+.upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.upload-button.game-button {
+    min-width: 160px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    border-radius: 0;
+    border: 4px solid #1a1a1a;
+    background: linear-gradient(180deg, #ffe35a 0%, #ff9a2f 55%, #ff6b4a 100%);
+    color: #1a1a1a;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #fff8f0;
+    box-shadow: 0 0 0 2px #fff8f0, 6px 6px 0 #1a1a1a;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-button.game-button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 0 0 0 2px #fff8f0, 8px 8px 0 #1a1a1a;
+    filter: brightness(1.06);
+}
+
+.upload-button.game-button:active {
+    transform: translate(1px, 1px);
+    box-shadow: 0 0 0 2px #fff8f0, 2px 2px 0 #1a1a1a;
+}
+
+.upload-button.game-button:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+}
+
+.upload-button.game-button::before {
+    content: '';
+    position: absolute;
+    inset: 6px 8px auto 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.55);
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+.upload-status {
+    font-size: 0.95rem;
+    color: #555;
+}
+
 body.dark-mode .upload-label {
     color: #f0f2f5;
+}
+
+body.dark-mode .upload-status {
+    color: #d2d6dc;
 }
 
 #preview-image {

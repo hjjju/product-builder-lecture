@@ -50,7 +50,10 @@
 
         <div class="animal-card">
             <div class="upload-panel">
-                <label class="upload-label" for="upload-input" data-lang="uploadLabel">Or upload a photo</label>
+                <div class="upload-controls">
+                    <button class="upload-button game-button" type="button" data-lang="chooseFile">Choose a file</button>
+                    <span id="upload-status" class="upload-status" data-lang="noFileSelected">No file selected</span>
+                </div>
                 <input type="file" id="upload-input" accept="image/*">
                 <img id="preview-image" alt="" />
             </div>
