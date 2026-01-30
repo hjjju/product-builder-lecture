@@ -141,9 +141,12 @@ function handleUpload(event) {
     reader.onload = () => {
         previewImage.src = reader.result;
         previewImage.style.display = 'block';
-        predictWithImage(previewImage);
+        previewImage.onload = () => {
+            predictWithImage(previewImage);
+        };
     };
     reader.readAsDataURL(file);
+    uploadInput.value = '';
 }
 
 function syncLanguage(language) {
@@ -161,7 +164,10 @@ function syncLanguage(language) {
 
 uploadInput.addEventListener('change', handleUpload);
 if (uploadButton && uploadInput) {
-    uploadButton.addEventListener('click', () => uploadInput.click());
+    uploadButton.addEventListener('click', () => {
+        uploadInput.value = '';
+        uploadInput.click();
+    });
 }
 
 document.addEventListener('language-change', (event) => {

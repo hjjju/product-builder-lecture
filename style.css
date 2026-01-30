@@ -515,6 +515,7 @@ body.dark-mode .helper-text {
     border: 1px solid #d9d6cf;
 }
 
+
 .place-info h4 {
     margin: 0 0 6px;
     font-size: 1rem;
@@ -550,11 +551,6 @@ body.dark-mode .helper-text {
     border: 1px solid #a3120b;
 }
 
-.badge.sample {
-    background: #f2f1ee;
-    color: #5a554b;
-    border: 1px dashed #b8b2a8;
-}
 
 .place-tags {
     display: flex;
@@ -582,11 +578,6 @@ body.dark-mode .helper-text {
     padding-bottom: 2px;
 }
 
-.place-link.sample-link {
-    border-bottom-color: transparent;
-    color: var(--muted);
-    cursor: default;
-}
 
 .place-link:hover {
     text-decoration: underline;
@@ -651,11 +642,6 @@ body.dark-mode .helper-text {
     font-size: 0.9rem;
 }
 
-.sample-note {
-    margin: 0 0 10px;
-    font-size: 0.85rem;
-    color: var(--muted);
-}
 
 body.dark-mode .place-card {
     background: var(--surface-dark);
@@ -686,11 +672,6 @@ body.dark-mode .summary-note {
     color: #9b9b9b;
 }
 
-body.dark-mode .badge.sample {
-    background: #1f1f1f;
-    color: #d6d6d6;
-    border-color: #4a4a4a;
-}
 
 body.dark-mode .quiz-card {
     background: var(--surface-dark);

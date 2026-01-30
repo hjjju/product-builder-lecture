@@ -8,51 +8,6 @@ const MAX_RESULTS = 6;
 const DESSERT_RESULTS = 4;
 const LOADING_CARDS = 3;
 
-const SAMPLE_PLACES = [
-    {
-        name: 'Sample Kitchen',
-        rating: 4.4,
-        user_ratings_total: 128,
-        opening_hours: { open_now: true },
-        types: ['restaurant', 'casual dining'],
-        isSample: true
-    },
-    {
-        name: 'Sample Bowl',
-        rating: 4.2,
-        user_ratings_total: 96,
-        opening_hours: { open_now: true },
-        types: ['korean', 'rice bowl'],
-        isSample: true
-    },
-    {
-        name: 'Sample Noodle',
-        rating: 4.1,
-        user_ratings_total: 84,
-        opening_hours: { open_now: false },
-        types: ['noodle', 'quick bite'],
-        isSample: true
-    }
-];
-
-const SAMPLE_DESSERTS = [
-    {
-        name: 'Sample Cafe',
-        rating: 4.5,
-        user_ratings_total: 142,
-        opening_hours: { open_now: true },
-        types: ['cafe', 'dessert'],
-        isSample: true
-    },
-    {
-        name: 'Sample Bakery',
-        rating: 4.3,
-        user_ratings_total: 77,
-        opening_hours: { open_now: true },
-        types: ['bakery', 'coffee'],
-        isSample: true
-    }
-];
 
 const locationBtn = document.getElementById('location-btn');
 const locationStatus = document.getElementById('location-status');
@@ -116,9 +71,6 @@ const labels = {
         view: 'View',
         miles: 'mi',
         emptyState: 'No recommendations available yet.',
-        sampleBadge: 'Sample',
-        sampleNote: 'Preview cards shown before loading nearby results.',
-        sampleLink: 'Preview',
         quizAnswerLabel: 'Answer',
         quizShowAnswer: 'Show answer',
         quizHideAnswer: 'Hide answer',
@@ -135,9 +87,6 @@ const labels = {
         view: '보기',
         miles: '마일',
         emptyState: '추천할 음식점이 없습니다.',
-        sampleBadge: '샘플',
-        sampleNote: '내 주변 추천을 불러오기 전 미리보기 카드가 표시됩니다.',
-        sampleLink: '미리보기',
         quizAnswerLabel: '정답',
         quizShowAnswer: '정답 보기',
         quizHideAnswer: '정답 숨기기',
@@ -154,9 +103,6 @@ const labels = {
         view: '見る',
         miles: 'マイル',
         emptyState: 'おすすめのお店が見つかりませんでした。',
-        sampleBadge: 'サンプル',
-        sampleNote: '近くのおすすめを読み込む前のプレビューです。',
-        sampleLink: 'プレビュー',
         quizAnswerLabel: '答え',
         quizShowAnswer: '答えを見る',
         quizHideAnswer: '答えを隠す',
@@ -363,7 +309,6 @@ function buildCard(place) {
     const ratingPercent = rating !== '-' ? ratingToPercent(Number(rating)) : 0;
     const distance = place.distance ? (place.distance / 1609.34).toFixed(1) : null;
     const mapLink = place.url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.place_id}`;
-    const sampleBadge = place.isSample ? `<span class="badge sample">${t.sampleBadge}</span>` : '';
 
     return `
         <article class="place-card">
@@ -374,7 +319,6 @@ function buildCard(place) {
                 <h4>${place.name}</h4>
                 <div class="place-meta">
                     <span class="badge ${openNow ? 'open' : 'closed'}">${openNow ? t.openNow : t.closed}</span>
-                    ${sampleBadge}
                     <span>${t.rating} ${rating} (${reviews} ${t.reviews})</span>
                     <div class="star-rating" aria-label="${rating} out of 5">
                         <span style="width: ${ratingPercent}%"></span>
@@ -383,9 +327,7 @@ function buildCard(place) {
                 </div>
                 <div class="place-tags">${place.types ? place.types.slice(0, 3).map(type => `<span>${type.replace(/_/g, ' ')}</span>`).join('') : ''}</div>
                 ${place.reviews ? buildSummaryBlock(place) : ''}
-                ${place.isSample
-                    ? `<span class="place-link sample-link" aria-disabled="true">${t.sampleLink}</span>`
-                    : `<a class="place-link" href="${mapLink}" target="_blank" rel="noopener">${t.view}</a>`}
+                <a class="place-link" href="${mapLink}" target="_blank" rel="noopener">${t.view}</a>
             </div>
         </article>
     `;
@@ -410,62 +352,18 @@ function renderLoading(target, count, isDessert = false) {
     target.innerHTML = new Array(count).fill(0).map(() => buildLoadingCard(isDessert)).join('');
 }
 
-function renderList(target, places, sampleData = SAMPLE_PLACES) {
-    if (!places.length && sampleData.length) {
-        const t = labels[state.language] || labels.en;
-        target.innerHTML = `
-            <p class="sample-note">${t.sampleNote}</p>
-            ${sampleData.map(buildCard).join('')}
-        `;
-        return;
-    }
+function renderList(target, places) {
+    const t = labels[state.language] || labels.en;
     if (!places.length) {
-        const t = labels[state.language] || labels.en;
         target.innerHTML = `<p class="empty-state">${t.emptyState}</p>`;
         return;
     }
     target.innerHTML = places.map(buildCard).join('');
 }
 
-function renderDessertList(target, places, sampleData = SAMPLE_DESSERTS) {
-    if (!places.length && sampleData.length) {
-        const t = labels[state.language] || labels.en;
-        target.innerHTML = `
-            <p class="sample-note">${t.sampleNote}</p>
-            ${sampleData.map(place => {
-                const photo = place.photos && place.photos.length ? buildPhotoUrl(place.photos[0]) : '';
-                const openNow = place.opening_hours && place.opening_hours.open_now;
-                const rating = place.rating ? place.rating.toFixed(1) : '-';
-                const reviews = place.user_ratings_total ? place.user_ratings_total : 0;
-                const ratingPercent = rating !== '-' ? ratingToPercent(Number(rating)) : 0;
-                const sampleBadge = place.isSample ? `<span class="badge sample">${t.sampleBadge}</span>` : '';
-
-                return `
-                    <article class="place-card dessert-card">
-                        <div class="place-photo">
-                            ${photo ? `<img src="${photo}" alt="${place.name}">` : `<div class="photo-placeholder"></div>`}
-                        </div>
-                        <div class="place-info">
-                            <h4>${place.name}</h4>
-                            <div class="place-meta">
-                                <span class="badge ${openNow ? 'open' : 'closed'}">${openNow ? t.openNow : t.closed}</span>
-                                ${sampleBadge}
-                                <span>${t.rating} ${rating} (${reviews} ${t.reviews})</span>
-                                <div class="star-rating" aria-label="${rating} out of 5">
-                                    <span style="width: ${ratingPercent}%"></span>
-                                </div>
-                            </div>
-                            <div class="place-tags">${place.types ? place.types.slice(0, 3).map(type => `<span>${type.replace(/_/g, ' ')}</span>`).join('') : ''}</div>
-                            <span class="place-link sample-link" aria-disabled="true">${t.sampleLink}</span>
-                        </div>
-                    </article>
-                `;
-            }).join('')}
-        `;
-        return;
-    }
+function renderDessertList(target, places) {
+    const t = labels[state.language] || labels.en;
     if (!places.length) {
-        const t = labels[state.language] || labels.en;
         target.innerHTML = `<p class="empty-state">${t.emptyState}</p>`;
         return;
     }
@@ -593,6 +491,9 @@ function handleLocationSuccess(position) {
 
 function handleLocationError() {
     setStatus('denied');
+    renderList(recommendList, []);
+    renderList(openList, []);
+    renderDessertList(dessertList, []);
 }
 
 function requestLocation() {
