@@ -6,6 +6,53 @@ const MEAL_CONFIG = {
 
 const MAX_RESULTS = 6;
 const DESSERT_RESULTS = 4;
+const LOADING_CARDS = 3;
+
+const SAMPLE_PLACES = [
+    {
+        name: 'Sample Kitchen',
+        rating: 4.4,
+        user_ratings_total: 128,
+        opening_hours: { open_now: true },
+        types: ['restaurant', 'casual dining'],
+        isSample: true
+    },
+    {
+        name: 'Sample Bowl',
+        rating: 4.2,
+        user_ratings_total: 96,
+        opening_hours: { open_now: true },
+        types: ['korean', 'rice bowl'],
+        isSample: true
+    },
+    {
+        name: 'Sample Noodle',
+        rating: 4.1,
+        user_ratings_total: 84,
+        opening_hours: { open_now: false },
+        types: ['noodle', 'quick bite'],
+        isSample: true
+    }
+];
+
+const SAMPLE_DESSERTS = [
+    {
+        name: 'Sample Cafe',
+        rating: 4.5,
+        user_ratings_total: 142,
+        opening_hours: { open_now: true },
+        types: ['cafe', 'dessert'],
+        isSample: true
+    },
+    {
+        name: 'Sample Bakery',
+        rating: 4.3,
+        user_ratings_total: 77,
+        opening_hours: { open_now: true },
+        types: ['bakery', 'coffee'],
+        isSample: true
+    }
+];
 
 const locationBtn = document.getElementById('location-btn');
 const locationStatus = document.getElementById('location-status');
@@ -13,6 +60,8 @@ const mealTitle = document.getElementById('meal-title');
 const recommendList = document.getElementById('recommend-list');
 const openList = document.getElementById('open-list');
 const dessertList = document.getElementById('dessert-list');
+const quizCard = document.getElementById('quiz-card');
+const quizRefresh = document.getElementById('quiz-refresh');
 
 const state = {
     language: localStorage.getItem('language') || 'en',
@@ -67,6 +116,12 @@ const labels = {
         view: 'View',
         miles: 'mi',
         emptyState: 'No recommendations available yet.',
+        sampleBadge: 'Sample',
+        sampleNote: 'Preview cards shown before loading nearby results.',
+        sampleLink: 'Preview',
+        quizAnswerLabel: 'Answer',
+        quizShowAnswer: 'Show answer',
+        quizHideAnswer: 'Hide answer',
         taste: 'Taste',
         clean: 'Cleanliness',
         menu: 'Popular menu',
@@ -80,6 +135,12 @@ const labels = {
         view: '보기',
         miles: '마일',
         emptyState: '추천할 음식점이 없습니다.',
+        sampleBadge: '샘플',
+        sampleNote: '내 주변 추천을 불러오기 전 미리보기 카드가 표시됩니다.',
+        sampleLink: '미리보기',
+        quizAnswerLabel: '정답',
+        quizShowAnswer: '정답 보기',
+        quizHideAnswer: '정답 숨기기',
         taste: '맛',
         clean: '청결',
         menu: '인기 메뉴',
@@ -93,12 +154,79 @@ const labels = {
         view: '見る',
         miles: 'マイル',
         emptyState: 'おすすめのお店が見つかりませんでした。',
+        sampleBadge: 'サンプル',
+        sampleNote: '近くのおすすめを読み込む前のプレビューです。',
+        sampleLink: 'プレビュー',
+        quizAnswerLabel: '答え',
+        quizShowAnswer: '答えを見る',
+        quizHideAnswer: '答えを隠す',
         taste: '味',
         clean: '清潔さ',
         menu: '人気メニュー',
         summaryNote: 'レビュー推定'
     }
 };
+
+const nonsenseQuizzes = {
+    en: [
+        { q: 'What has to be broken before you can use it?', a: 'An egg.' },
+        { q: "I'm tall when I'm young, and I'm short when I'm old. What am I?", a: 'A candle.' },
+        { q: 'What month of the year has 28 days?', a: 'All of them.' },
+        { q: 'What is full of holes but still holds water?', a: 'A sponge.' },
+        { q: 'What question can you never answer yes to?', a: 'Are you asleep yet?' },
+        { q: "What is always in front of you but can't be seen?", a: 'The future.' },
+        { q: 'What can you break, even if you never pick it up or touch it?', a: 'A promise.' },
+        { q: 'What goes up but never comes down?', a: 'Your age.' },
+        { q: 'What gets wet while drying?', a: 'A towel.' },
+        { q: 'What can you keep after giving to someone?', a: 'Your word.' },
+        { q: "What can you catch but can't throw?", a: 'A cold.' },
+        { q: "What has one eye but can't see?", a: 'A needle.' },
+        { q: 'What appears once in a minute, twice in a moment, but never in a thousand years?', a: 'The letter M.' },
+        { q: 'I can go all around the world but never leave my corner. What am I?', a: 'A stamp.' },
+        { q: 'If you drop me, I crack. If you smile at me, I smile back. What am I?', a: 'A mirror.' },
+        { q: 'What rock group consists of four famous men, but none of them sing?', a: 'Mount Rushmore.' },
+        { q: 'I start with M, end with X, and have a never-ending amount of letters. What am I?', a: 'A mailbox.' },
+        { q: 'What is orange and sounds like a parrot?', a: 'A carrot.' },
+        { q: 'I travel all around the world, but never leave the corner. What am I?', a: 'A stamp.' },
+        { q: 'Why did 6 fear 7?', a: 'Because 789 (seven ate nine).' }
+    ],
+    ko: [
+        { q: '타이타닉의 구명보트는 몇 명이 탈수 있을까?', a: '9명.' },
+        { q: '초등학생이 가장 좋아하는 동네는?', a: '방학동.' },
+        { q: '진짜 문제투성이인 것은?', a: '시험지.' },
+        { q: '폭력배가 많은 나라?', a: '칠레.' },
+        { q: '아무리 예뻐도 미녀라고 못하는 이사람은?', a: '미남.' },
+        { q: '닿기만 해도 취하는 술은?', a: '입술.' },
+        { q: '보기만 해도 취하는 술은?', a: '마술.' },
+        { q: '학생들이 싫어하는 피자는?', a: '책피자.' },
+        { q: '늘 후회하면서 타는 차는?', a: '아차차.' },
+        { q: '가장 지저분한 닭은?', a: '발바닥.' },
+        { q: '가장 무서운 닭은?', a: '혓바닥.' },
+        { q: '세상에서 가장 행복한 존속은?', a: '대만족.' },
+        { q: '이세상에서 가장 맛없는 감은?', a: '열등감.' },
+        { q: '이세상에서 가장 맛있는 감은?', a: '자신감.' },
+        { q: '왕이 넘어지면?', a: '킹콩.' },
+        { q: '왕이 궁궐에 들어가기 싫어할 때 하는 말은?', a: '궁시렁 궁시렁.' },
+        { q: '원숭이가 벌을 서면?', a: '벌거숭이.' },
+        { q: '서울시민 모두가 동시에 외치면 무슨 말이 될까?', a: '천만의 말씀.' },
+        { q: '사람의 몸무게가 가장 많이 나갈 때는?', a: '철들 때.' },
+        { q: '코끼리 두 마리가 서로 싸워, 둘 다 코가 떨어져 나갔다면 어떻게 될까?', a: '끼리끼리.' }
+    ],
+    ja: [
+        { q: 'パンはパンでも食べられないパンは?', a: 'フライパン。' },
+        { q: 'カレーはカレーでも熱くないカレーは?', a: 'カレンダー。' },
+        { q: 'タイはタイでも食べられないタイは?', a: 'ネクタイ。' },
+        { q: 'ハムはハムでも食べられないハムは?', a: 'ハムスター。' },
+        { q: 'サイはサイでも乗れないサイは?', a: 'サイコロ。' },
+        { q: 'カキはカキでも食べられないカキは?', a: '垣根 (かきね)。' },
+        { q: 'スターはスターでも食べられるスターは?', a: 'カスタード。' },
+        { q: 'バスはバスでも乗れないバスは?', a: 'コンパス。' },
+        { q: 'ボールはボールでも蹴れないボールは?', a: 'ダンボール。' },
+        { q: '「かか」と声をかけても返事をしないのは?', a: 'かかし。' }
+    ]
+};
+
+let lastQuizIndex = null;
 
 function getText(map, key) {
     const t = map[state.language] || map.en;
@@ -117,6 +245,24 @@ function getMealTime() {
 function updateMealTitle() {
     const current = getMealTime();
     mealTitle.textContent = getText(timeTitles, current);
+}
+
+function renderQuiz() {
+    if (!quizCard) return;
+    const pool = nonsenseQuizzes[state.language] || nonsenseQuizzes.en;
+    if (!pool.length) return;
+    let idx = Math.floor(Math.random() * pool.length);
+    if (pool.length > 1 && idx === lastQuizIndex) {
+        idx = (idx + 1) % pool.length;
+    }
+    lastQuizIndex = idx;
+    const t = labels[state.language] || labels.en;
+    const item = pool[idx];
+    quizCard.innerHTML = `
+        <div class="quiz-question">${item.q}</div>
+        <button class="quiz-toggle" type="button" aria-expanded="false">${t.quizShowAnswer}</button>
+        <div class="quiz-answer is-hidden"><span>${t.quizAnswerLabel}:</span> ${item.a}</div>
+    `;
 }
 
 function initPlacesService() {
@@ -217,6 +363,7 @@ function buildCard(place) {
     const ratingPercent = rating !== '-' ? ratingToPercent(Number(rating)) : 0;
     const distance = place.distance ? (place.distance / 1609.34).toFixed(1) : null;
     const mapLink = place.url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.place_id}`;
+    const sampleBadge = place.isSample ? `<span class="badge sample">${t.sampleBadge}</span>` : '';
 
     return `
         <article class="place-card">
@@ -227,6 +374,7 @@ function buildCard(place) {
                 <h4>${place.name}</h4>
                 <div class="place-meta">
                     <span class="badge ${openNow ? 'open' : 'closed'}">${openNow ? t.openNow : t.closed}</span>
+                    ${sampleBadge}
                     <span>${t.rating} ${rating} (${reviews} ${t.reviews})</span>
                     <div class="star-rating" aria-label="${rating} out of 5">
                         <span style="width: ${ratingPercent}%"></span>
@@ -235,13 +383,42 @@ function buildCard(place) {
                 </div>
                 <div class="place-tags">${place.types ? place.types.slice(0, 3).map(type => `<span>${type.replace(/_/g, ' ')}</span>`).join('') : ''}</div>
                 ${place.reviews ? buildSummaryBlock(place) : ''}
-                <a class="place-link" href="${mapLink}" target="_blank" rel="noopener">${t.view}</a>
+                ${place.isSample
+                    ? `<span class="place-link sample-link" aria-disabled="true">${t.sampleLink}</span>`
+                    : `<a class="place-link" href="${mapLink}" target="_blank" rel="noopener">${t.view}</a>`}
             </div>
         </article>
     `;
 }
 
-function renderList(target, places) {
+function buildLoadingCard(isDessert = false) {
+    return `
+        <article class="place-card ${isDessert ? 'dessert-card' : ''} loading">
+            <div class="place-photo">
+                <div class="skeleton skeleton-photo"></div>
+            </div>
+            <div class="place-info">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-line"></div>
+                <div class="skeleton skeleton-line short"></div>
+            </div>
+        </article>
+    `;
+}
+
+function renderLoading(target, count, isDessert = false) {
+    target.innerHTML = new Array(count).fill(0).map(() => buildLoadingCard(isDessert)).join('');
+}
+
+function renderList(target, places, sampleData = SAMPLE_PLACES) {
+    if (!places.length && sampleData.length) {
+        const t = labels[state.language] || labels.en;
+        target.innerHTML = `
+            <p class="sample-note">${t.sampleNote}</p>
+            ${sampleData.map(buildCard).join('')}
+        `;
+        return;
+    }
     if (!places.length) {
         const t = labels[state.language] || labels.en;
         target.innerHTML = `<p class="empty-state">${t.emptyState}</p>`;
@@ -250,7 +427,43 @@ function renderList(target, places) {
     target.innerHTML = places.map(buildCard).join('');
 }
 
-function renderDessertList(target, places) {
+function renderDessertList(target, places, sampleData = SAMPLE_DESSERTS) {
+    if (!places.length && sampleData.length) {
+        const t = labels[state.language] || labels.en;
+        target.innerHTML = `
+            <p class="sample-note">${t.sampleNote}</p>
+            ${sampleData.map(place => {
+                const photo = place.photos && place.photos.length ? buildPhotoUrl(place.photos[0]) : '';
+                const openNow = place.opening_hours && place.opening_hours.open_now;
+                const rating = place.rating ? place.rating.toFixed(1) : '-';
+                const reviews = place.user_ratings_total ? place.user_ratings_total : 0;
+                const ratingPercent = rating !== '-' ? ratingToPercent(Number(rating)) : 0;
+                const sampleBadge = place.isSample ? `<span class="badge sample">${t.sampleBadge}</span>` : '';
+
+                return `
+                    <article class="place-card dessert-card">
+                        <div class="place-photo">
+                            ${photo ? `<img src="${photo}" alt="${place.name}">` : `<div class="photo-placeholder"></div>`}
+                        </div>
+                        <div class="place-info">
+                            <h4>${place.name}</h4>
+                            <div class="place-meta">
+                                <span class="badge ${openNow ? 'open' : 'closed'}">${openNow ? t.openNow : t.closed}</span>
+                                ${sampleBadge}
+                                <span>${t.rating} ${rating} (${reviews} ${t.reviews})</span>
+                                <div class="star-rating" aria-label="${rating} out of 5">
+                                    <span style="width: ${ratingPercent}%"></span>
+                                </div>
+                            </div>
+                            <div class="place-tags">${place.types ? place.types.slice(0, 3).map(type => `<span>${type.replace(/_/g, ' ')}</span>`).join('') : ''}</div>
+                            <span class="place-link sample-link" aria-disabled="true">${t.sampleLink}</span>
+                        </div>
+                    </article>
+                `;
+            }).join('')}
+        `;
+        return;
+    }
     if (!places.length) {
         const t = labels[state.language] || labels.en;
         target.innerHTML = `<p class="empty-state">${t.emptyState}</p>`;
@@ -388,9 +601,10 @@ function requestLocation() {
         return;
     }
 
-    recommendList.innerHTML = '';
-    openList.innerHTML = '';
-    dessertList.innerHTML = '';
+    setStatus('loading');
+    renderLoading(recommendList, LOADING_CARDS, false);
+    renderLoading(openList, LOADING_CARDS, false);
+    renderLoading(dessertList, Math.max(2, Math.floor(LOADING_CARDS / 2)), true);
 
     navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError, {
         enableHighAccuracy: false,
@@ -402,9 +616,30 @@ function requestLocation() {
 locationBtn.addEventListener('click', requestLocation);
 updateMealTitle();
 setStatus('ready');
+renderList(recommendList, []);
+renderList(openList, []);
+renderDessertList(dessertList, []);
+renderQuiz();
+if (quizRefresh) {
+    quizRefresh.addEventListener('click', renderQuiz);
+}
+if (quizCard) {
+    quizCard.addEventListener('click', event => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (!target.classList.contains('quiz-toggle')) return;
+        const answer = quizCard.querySelector('.quiz-answer');
+        if (!answer) return;
+        const t = labels[state.language] || labels.en;
+        const isHidden = answer.classList.toggle('is-hidden');
+        target.textContent = isHidden ? t.quizShowAnswer : t.quizHideAnswer;
+        target.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
+    });
+}
 
 document.addEventListener('language-change', event => {
     state.language = event.detail.language;
     setStatus('ready');
     updateMealTitle();
+    renderQuiz();
 });
