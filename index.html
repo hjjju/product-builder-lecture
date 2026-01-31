@@ -7,13 +7,12 @@
     <title>오늘 뭐 먹지</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2131439565248509"
-     crossorigin="anonymous"></script>
+    <script src="adsense-loader.js" defer></script>
     <script src="theme-manager.js" defer></script>
     <script src="language-manager.js" defer></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKD9eThqYRs8Aswm_Fk-RmS1jtssqsSjU&libraries=places" defer></script>
 </head>
-<body class="retro-os">
+<body class="retro-os" data-ads="on" data-ads-min-words="250">
     <div class="os-frame">
         <header class="os-titlebar">
             <div class="os-title">
@@ -56,6 +55,7 @@
         </div>
         <a class="top-link" href="animal-face.html" data-lang="animalTestLink">Animal Face Test</a>
     </div>
+    <main id="publisher-content">
     <div class="main-container">
         <h1 id="meal-title">오늘 점심 뭐 먹지?</h1>
         <p class="subtitle" data-lang="mealSubtitle">위치 기반으로 평이 좋은 음식점을 시간대별로 추천해드려요.</p>
@@ -65,11 +65,47 @@
             <a href="contact.html" data-lang="contactLink">Contact Us</a>
         </div>
     </div>
+    <section class="content-section overview-section">
+        <h2 data-lang="overviewTitle">이 사이트가 하는 일</h2>
+        <p data-lang="overviewBody1">이 사이트는 오늘 먹을 메뉴를 빠르게 결정하고, 현재 영업 중인 주변 맛집을 찾는 데 도움을 줍니다. 간단한 퀴즈와 동물상 테스트도 함께 제공합니다.</p>
+        <p data-lang="overviewBody2">추천은 공개된 장소 데이터를 바탕으로 몇 가지 기준을 투명하게 적용해 제공합니다. 과장 없이 빠른 선택을 돕는 것이 목표입니다.</p>
+        <div class="info-grid">
+            <article class="info-card">
+                <h3 data-lang="overviewCard1Title">위치 기반 추천</h3>
+                <p data-lang="overviewCard1Text">허용 시 주변의 영업 중인 음식점과 카페를 보여줍니다.</p>
+            </article>
+            <article class="info-card">
+                <h3 data-lang="overviewCard2Title">시간대 맞춤</h3>
+                <p data-lang="overviewCard2Text">아침/점심/저녁에 맞는 키워드로 추천을 달리합니다.</p>
+            </article>
+            <article class="info-card">
+                <h3 data-lang="overviewCard3Title">가벼운 재미</h3>
+                <p data-lang="overviewCard3Text">퀴즈와 동물상 테스트는 재미와 참고용입니다.</p>
+            </article>
+        </div>
+    </section>
     <section class="content-section">
         <h2 data-lang="quizTitle">오늘의 넌센스 퀴즈</h2>
         <p data-lang="quizSubtitle">국가(언어)별로 다른 문제를 랜덤으로 보여드립니다.</p>
         <div class="quiz-card" id="quiz-card" aria-live="polite"></div>
         <button class="secondary-cta" id="quiz-refresh" data-lang="quizButton">다른 퀴즈 보기</button>
+    </section>
+    <section class="content-section">
+        <h2 data-lang="howTitle">추천 방식</h2>
+        <p data-lang="howIntro">아래 기준을 적용해 간단하고 일관된 결과를 제공합니다.</p>
+        <ol class="steps-list">
+            <li data-lang="howStep1">약 2.5km 이내의 Google Places 데이터를 조회합니다.</li>
+            <li data-lang="howStep2">영업 중 표시가 있는 곳과 최소 평점 기준을 통과한 곳만 보여줍니다.</li>
+            <li data-lang="howStep3">선택 부담을 줄이기 위해 목록을 작게 유지합니다.</li>
+            <li data-lang="howStep4">정보가 부족하면 요약 카드 또는 안내 메시지를 표시합니다.</li>
+        </ol>
+        <h3 data-lang="dataTitle">데이터 출처 및 한계</h3>
+        <ul>
+            <li data-lang="dataItem1">평점, 리뷰 수, 영업시간, 사진은 Google Places에서 제공됩니다.</li>
+            <li data-lang="dataItem2">공개 정보의 정확도에 따라 결과가 달라질 수 있습니다.</li>
+            <li data-lang="dataItem3">가격, 메뉴, 좌석 가능 여부는 보장하지 않습니다.</li>
+            <li data-lang="dataItem4">방문 전 공식 페이지 확인 또는 연락을 권장합니다.</li>
+        </ul>
     </section>
     <section class="content-section recommendation-section">
         <h2 id="recommend-title" data-lang="recommendTitle">지금 시간대 추천</h2>
@@ -87,6 +123,28 @@
         <p data-lang="dessertSubtitle">평점이 높은 카페와 사진을 골라 보여드립니다.</p>
         <div class="place-list" id="dessert-list"></div>
         <p class="helper-text" data-lang="dessertNote">사진은 Google 제공 이미지이며 매장/메뉴 사진일 수 있습니다.</p>
+    </section>
+    <section class="content-section">
+        <h2 data-lang="qualityTitle">품질과 투명성</h2>
+        <p data-lang="qualityBody1">과도한 광고를 피하고, 콘텐츠가 있는 화면에서만 광고가 노출되도록 설계합니다.</p>
+        <ul>
+            <li data-lang="qualityList1">추천 기준을 명확하게 공개합니다.</li>
+            <li data-lang="qualityList2">위치는 선택 사항이며 동의 시에만 사용됩니다.</li>
+            <li data-lang="qualityList3">신뢰를 위해 문구와 기능을 꾸준히 개선합니다.</li>
+        </ul>
+    </section>
+    <section class="content-section">
+        <h2 data-lang="faqTitle">자주 묻는 질문</h2>
+        <dl class="faq-list">
+            <dt data-lang="faqQ1">위치 정보가 저장되나요?</dt>
+            <dd data-lang="faqA1">아니요. 위치는 브라우저에서만 사용되며, Google Places에 근처 결과를 요청하는 데 쓰입니다.</dd>
+            <dt data-lang="faqQ2">리뷰 요약은 어떻게 만들어지나요?</dt>
+            <dd data-lang="faqA2">리뷰 키워드를 기반으로 한 간단한 추정이며 정확하지 않을 수 있습니다.</dd>
+            <dt data-lang="faqQ3">추천이 적게 나오는 이유는?</dt>
+            <dd data-lang="faqA3">영업 중 여부와 평점 기준을 통과한 곳만 보여주기 때문입니다.</dd>
+            <dt data-lang="faqQ4">위치 허용 없이도 쓸 수 있나요?</dt>
+            <dd data-lang="faqA4">퀴즈와 테스트는 이용 가능하지만, 주변 추천에는 위치 허용이 필요합니다.</dd>
+        </dl>
     </section>
     <div id="disqus_thread"></div>
     <script>
@@ -113,6 +171,7 @@
         <a href="privacy.html" data-lang="footerPrivacy">개인정보 처리방침</a>
         <a href="terms.html" data-lang="footerTerms">이용약관</a>
     </footer>
+    </main>
     </div>
 </body>
 </html>
