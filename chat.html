@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 채팅</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <script src="theme-manager.js" defer></script>
+    <script src="language-manager.js" defer></script>
+    <script>
+        window.CHAT_SERVER_URL = window.CHAT_SERVER_URL || '';
+    </script>
+    <script src="chat.js" defer></script>
+</head>
+<body class="retro-os">
+    <div class="os-frame">
+        <header class="os-titlebar">
+            <div class="os-title">
+                <span class="os-icon"></span>
+                <span data-chat="titlebar">Retro OS · Live Chat</span>
+            </div>
+            <div class="os-controls">
+                <span class="os-btn"></span>
+                <span class="os-btn"></span>
+                <span class="os-btn"></span>
+            </div>
+        </header>
+        <div class="os-menubar">
+            <button class="os-menu-item" type="button">File</button>
+            <button class="os-menu-item" type="button">Edit</button>
+            <button class="os-menu-item" type="button">View</button>
+            <button class="os-menu-item" type="button">Tools</button>
+            <button class="os-menu-item" type="button">Help</button>
+        </div>
+        <div class="top-right-controls">
+            <div id="language-switcher" class="language-switcher">
+                <button class="lang-toggle" type="button" aria-haspopup="listbox" aria-expanded="false">
+                    <img class="lang-flag" src="assets/flags/us.svg" alt="United States flag">
+                    <span class="lang-code">EN</span>
+                </button>
+                <ul class="lang-menu" role="listbox" aria-label="Language">
+                    <li class="lang-option" role="option" data-value="en" aria-selected="true">
+                        <img class="lang-flag" src="assets/flags/us.svg" alt="United States flag">
+                        <span class="lang-code">EN</span>
+                    </li>
+                    <li class="lang-option" role="option" data-value="ko" aria-selected="false">
+                        <img class="lang-flag" src="assets/flags/kr.svg" alt="South Korea flag">
+                        <span class="lang-code">KOR</span>
+                    </li>
+                    <li class="lang-option" role="option" data-value="ja" aria-selected="false">
+                        <img class="lang-flag" src="assets/flags/jp.svg" alt="Japan flag">
+                        <span class="lang-code">JP</span>
+                    </li>
+                </ul>
+            </div>
+            <a class="top-link" href="index.html" data-lang="backHome">홈으로</a>
+            <a class="top-link" href="animal-face.html" data-lang="animalTestLink">동물상 테스트</a>
+        </div>
+        <main class="chat-shell" id="publisher-content">
+            <section class="chat-panel">
+                <header class="chat-hero">
+                    <div class="chat-hero-text">
+                        <h1 data-chat="title">실시간 채팅</h1>
+                        <p class="subtitle" data-chat="subtitle">아이디어를 빠르게 나누는 실시간 대화 공간입니다.</p>
+                    </div>
+                    <div class="chat-hero-meta">
+                        <span id="chat-room-badge" class="chat-room-badge">#lobby</span>
+                        <div class="chat-status-pill">
+                            <span data-chat="statusLabel">상태</span>
+                            <strong id="chat-status-text">Local realtime</strong>
+                        </div>
+                    </div>
+                </header>
+                <div class="chat-setup">
+                    <div class="chat-field">
+                        <label for="chat-room" data-chat="roomLabel">방 이름</label>
+                        <div class="chat-field-row">
+                            <input id="chat-room" class="chat-input" type="text" data-chat-placeholder="roomPlaceholder" placeholder="lobby" autocomplete="off">
+                            <button id="chat-join" class="secondary-cta" type="button" data-chat="joinButton">참여</button>
+                        </div>
+                    </div>
+                    <div class="chat-field">
+                        <label for="chat-name" data-chat="nameLabel">닉네임</label>
+                        <input id="chat-name" class="chat-input" type="text" data-chat-placeholder="namePlaceholder" placeholder="Guest" autocomplete="off">
+                    </div>
+                    <div class="chat-field">
+                        <label for="chat-server-url" data-chat="serverLabel">WebSocket URL</label>
+                        <div class="chat-field-row">
+                            <input id="chat-server-url" class="chat-input" type="text" data-chat-placeholder="serverPlaceholder" placeholder="wss://chat.example.com" autocomplete="off">
+                            <button id="chat-server-apply" class="secondary-cta" type="button" data-chat="serverApply">적용</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-window" role="log" aria-live="polite">
+                    <p id="chat-empty" class="chat-empty" data-chat="empty">아직 메시지가 없어요.</p>
+                    <ul id="chat-messages" class="chat-messages"></ul>
+                </div>
+                <form id="chat-form" class="chat-compose">
+                    <label for="chat-message" data-chat="messageLabel">메시지</label>
+                    <div class="chat-compose-row">
+                        <textarea id="chat-message" class="chat-input chat-message-input" rows="2" data-chat-placeholder="messagePlaceholder" placeholder="메시지를 입력하세요" required></textarea>
+                        <button class="primary-cta" type="submit" data-chat="sendButton">보내기</button>
+                    </div>
+                </form>
+            </section>
+            <aside class="chat-info">
+                <h2 data-chat="tipsTitle">이용 팁</h2>
+                <ul>
+                    <li data-chat="tip1">간단하고 친근한 메시지를 남겨주세요.</li>
+                    <li data-chat="tip2">Enter 키로 전송, Shift+Enter로 줄바꿈이 됩니다.</li>
+                    <li data-chat="tip3">방 이름을 바꾸면 주제가 분리됩니다.</li>
+                </ul>
+                <div class="chat-note" data-chat="note">멀티 기기 동기화를 위해서는 WebSocket 서버 주소를 설정해 주세요.</div>
+            </aside>
+        </main>
+    </div>
+</body>
+</html>
