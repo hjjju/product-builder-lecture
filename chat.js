@@ -5,24 +5,20 @@ const chatMessages = document.getElementById('chat-messages');
 const chatEmpty = document.getElementById('chat-empty');
 const chatForm = document.getElementById('chat-form');
 const chatMessageInput = document.getElementById('chat-message');
-const chatRoomInput = document.getElementById('chat-room');
 const chatNameInput = document.getElementById('chat-name');
-const chatJoinButton = document.getElementById('chat-join');
 const chatServerUrlInput = document.getElementById('chat-server-url');
 const chatServerApplyButton = document.getElementById('chat-server-apply');
 const chatStatusText = document.getElementById('chat-status-text');
 const chatRoomBadge = document.getElementById('chat-room-badge');
+const SINGLE_ROOM = 'global';
 
 const CHAT_TEXT = {
     en: {
         titlebar: 'Retro OS · Live Chat',
         title: 'Live Chat',
         subtitle: 'Share quick ideas with real-time messages.',
-        roomLabel: 'Room',
-        roomPlaceholder: 'lobby',
         nameLabel: 'Display name',
         namePlaceholder: 'Guest',
-        joinButton: 'Join',
         serverLabel: 'WebSocket URL',
         serverPlaceholder: 'wss://chat.example.com',
         serverApply: 'Apply',
@@ -38,18 +34,15 @@ const CHAT_TEXT = {
         tipsTitle: 'Tips',
         tip1: 'Keep it friendly and concise.',
         tip2: 'Press Enter to send, Shift+Enter for a new line.',
-        tip3: 'Change room names to split topics.',
+        tip3: 'Everyone joins the same live chat room.',
         note: 'Set a WebSocket server URL to sync across devices.'
     },
     ko: {
         titlebar: 'Retro OS · Live Chat',
         title: '실시간 채팅',
         subtitle: '아이디어를 빠르게 나누는 실시간 대화 공간입니다.',
-        roomLabel: '방 이름',
-        roomPlaceholder: 'lobby',
         nameLabel: '닉네임',
         namePlaceholder: 'Guest',
-        joinButton: '참여',
         serverLabel: 'WebSocket URL',
         serverPlaceholder: 'wss://chat.example.com',
         serverApply: '적용',
@@ -65,18 +58,15 @@ const CHAT_TEXT = {
         tipsTitle: '이용 팁',
         tip1: '간단하고 친근한 메시지를 남겨주세요.',
         tip2: 'Enter 키로 전송, Shift+Enter로 줄바꿈이 됩니다.',
-        tip3: '방 이름을 바꾸면 주제가 분리됩니다.',
+        tip3: '모든 사용자가 같은 실시간 채팅방에 참여합니다.',
         note: '멀티 기기 동기화를 위해서는 WebSocket 서버 주소를 설정해 주세요.'
     },
     ja: {
         titlebar: 'Retro OS · Live Chat',
         title: 'リアルタイムチャット',
         subtitle: 'アイデアをすぐに共有できるチャットです。',
-        roomLabel: 'ルーム',
-        roomPlaceholder: 'lobby',
         nameLabel: '表示名',
         namePlaceholder: 'Guest',
-        joinButton: '参加',
         serverLabel: 'WebSocket URL',
         serverPlaceholder: 'wss://chat.example.com',
         serverApply: '適用',
@@ -92,7 +82,7 @@ const CHAT_TEXT = {
         tipsTitle: '使い方のヒント',
         tip1: '短く丁寧なメッセージがおすすめです。',
         tip2: 'Enterで送信、Shift+Enterで改行。',
-        tip3: 'ルーム名を変えると話題を分けられます。',
+        tip3: '全員が同じリアルタイムチャットルームに参加します。',
         note: '複数端末で同期するには WebSocket サーバーURL を設定してください。'
     }
 };
@@ -144,7 +134,7 @@ const resolveInitialServerUrl = () => {
 
 const state = {
     language: localStorage.getItem('language') || 'en',
-    room: localStorage.getItem('chatRoom') || 'lobby',
+    room: SINGLE_ROOM,
     name: localStorage.getItem('chatName') || '',
     serverUrl: resolveInitialServerUrl(),
     statusKey: 'statusLocal',
@@ -322,34 +312,6 @@ const connectWebSocket = () => {
     }
 };
 
-const resetChat = () => {
-    if (chatMessages) {
-        chatMessages.innerHTML = '';
-    }
-    if (chatEmpty) {
-        chatEmpty.style.display = 'block';
-    }
-};
-
-const updateRoom = () => {
-    const nextRoom = sanitizeMessage(chatRoomInput.value) || 'lobby';
-    state.room = nextRoom;
-    localStorage.setItem('chatRoom', nextRoom);
-    chatRoomInput.value = nextRoom;
-    if (chatRoomBadge) {
-        chatRoomBadge.textContent = `#${nextRoom}`;
-    }
-    resetChat();
-    connectWebSocket();
-    addMessage({
-        id: `system-${Date.now()}`,
-        name: 'system',
-        text: `Joined #${nextRoom}`,
-        timestamp: Date.now(),
-        system: true
-    });
-};
-
 const updateName = () => {
     const nextName = sanitizeMessage(chatNameInput.value) || 'Guest';
     state.name = nextName;
@@ -408,9 +370,6 @@ const handleKeydown = (event) => {
 };
 
 const initChat = () => {
-    if (chatRoomInput) {
-        chatRoomInput.value = state.room;
-    }
     if (chatRoomBadge) {
         chatRoomBadge.textContent = `#${state.room}`;
     }
@@ -428,12 +387,6 @@ const initChat = () => {
     chatForm.addEventListener('submit', handleSubmit);
     chatMessageInput.addEventListener('keydown', handleKeydown);
 
-    chatJoinButton.addEventListener('click', () => {
-        updateName();
-        updateRoom();
-    });
-
-    chatRoomInput.addEventListener('blur', updateRoom);
     chatNameInput.addEventListener('blur', updateName);
     if (chatServerApplyButton) {
         chatServerApplyButton.addEventListener('click', updateServerUrl);
